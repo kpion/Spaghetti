@@ -43,7 +43,7 @@ Then build it:
 Easily include contents of external files to keep your documentation updated without manual copy-pasting. For example:
 
 ```php
-<?= Spaghetti::file('../src/Entity/User.php'); ?>
+<?= Spaghetti->file('../src/Entity/User.php'); ?>
 ```
 
 This includes the contents of `User.php` directly in the Markdown output.
@@ -53,7 +53,7 @@ This includes the contents of `User.php` directly in the Markdown output.
 You can use `showCreateTable` to generate a Markdown-friendly representation of your table’s SQL schema:
 
 ```php
-<?= Spaghetti::showCreateTable('example_table'); ?>
+<?= Spaghetti->showCreateTable('example_table'); ?>
 ```
 
 Assuming `example_table` is defined in your database, the output might look like this:
@@ -72,25 +72,25 @@ CREATE TABLE `example_table` (
 Here are some of the core functions available in **Spaghetti** for generating documentation content:
 
 - **File Inclusion**:
-  `Spaghetti::file($path)` - Includes the contents of the specified file.
+  `Spaghetti->file($path)` - Includes the contents of the specified file.
 
 - **SQL Table Schema**:
-  `Spaghetti::showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
+  `Spaghetti->db->showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
 
 - **SQL Query Execution**:
-  `Spaghetti::sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
+  `Spaghetti->db->sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
 
 - **Directory Structure**:
-  `Spaghetti::directoryStructure($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters.
+  `Spaghetti->directoryStructure($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters.
 
 - **Table Description**:
-  `Spaghetti::describeTable($tableName)` - Displays column details of a table, such as types and keys.
+  `Spaghetti->db->describeTable($tableName)` - Displays column details of a table, such as types and keys.
 
 - **Table Indexes**:
-  `Spaghetti::showIndexes($tableName)` - Lists all indexes of the specified table in Markdown format.
+  `Spaghetti->db->showIndexes($tableName)` - Lists all indexes of the specified table in Markdown format.
 
 - **Complete Table Documentation**:
-  `Spaghetti::describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
+  `Spaghetti->db->describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
 
 ---
 
@@ -98,10 +98,10 @@ Here are some of the core functions available in **Spaghetti** for generating do
 
 1. Clone the repository.
 2. Ensure PHP is installed on your system.
-3. Run the `process-Spaghetti` script with your `.Spaghetti` file as an argument to generate the Markdown output:
+3. Run the `spaghetti` script with your `your-file.md.spaghetti` file as an argument to generate the Markdown output:
 
 ```bash
-process-Spaghetti your_file.Spaghetti > output.md
+spaghetti your-file.md.spaghetti > your-file.md
 ```
 
 ### Contributing
