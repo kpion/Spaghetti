@@ -1,0 +1,7 @@
+/.local
+/*.code-workspace
+/.vscode
+venv/
+phpstan.neon
+/composer.lock
+/vendor

@@ -1,0 +1,41 @@
+{
+    "name": "kpion/spaghetti",
+    "description": "Spaghetti - making Markdown with PHP",
+    "license": "MIT",
+    "type": "project",
+    "keywords": ["markdown", "md", "documentation", "generator"],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
+    "bin": [
+        "bin/spaghetti"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kpion\\Spaghetti\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kpion\\Spaghetti\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "support": {
+        "issues": "https://github.com/kpion/spaghetti/issues",
+        "source": "https://github.com/kpion/spaghetti"
+    },
+    "authors": [
+        {
+            "name": "Konrad Papala",
+            "email": "konradpapala@gmail.com",
+            "homepage": "https://github.com/kpion",
+            "role": "Developer"
+        }
+    ]
+}

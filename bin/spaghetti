@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+// Let's find the autoloader.
+(function(){
+    $autoloads = [
+        __DIR__ . '/../vendor/autoload.php', // as dependency (local development)
+        __DIR__ . '/../../../autoload.php', // as main package
+    ];
+
+    foreach ($autoloads as $file) if (file_exists($file) && is_readable($file)) {
+        require_once($file);
+
+        return;
+    }
+
+    throw new Exception('Could not find autoload file. Check your composer installation.');
+})();
+
+
+use Kpion\Spaghetti\Spaghetti;
+
+// Uruchom aplikację
+$spaghetti = new Spaghetti($argv);
+require_once $spaghetti->inputFile(false);
+
