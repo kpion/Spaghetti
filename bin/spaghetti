@@ -20,7 +20,8 @@
 
 use Kpion\Spaghetti\Spaghetti;
 
-// Uruchom aplikację
+// Run...
 $spaghetti = new Spaghetti($argv);
+// $spaghetti->import($spaghetti->inputFile(false));
 require_once $spaghetti->inputFile(false);
 

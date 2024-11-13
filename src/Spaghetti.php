@@ -123,6 +123,23 @@ class Spaghetti
         return $this->isAbsolute($path) ? $path : $this->root . '/' . ltrim($path, '/');
     }    
 
+    // Returns a **parsed** content of a specified file/url.
+    // This is evaluate it, so it's usefull for including .md.php files. Otherwise, if we 
+    // want to include a code snippet, without evaluating, we should we ::file method.
+    public function import (string $path, array $context = []):string{
+        $path = $this->fullPath($path);
+        // We want to pass us ($this) as $spaghetti. Unless the caller overwritten it. 
+        // Plus, the caller can pass any other stuff they want to.
+        $context = array_merge([
+                'spaghetti' => $this,
+            ],$context
+        );        
+        ob_start();
+        extract($context, EXTR_SKIP);
+        require ($path);
+        return ob_get_clean();        
+    }
+
     // Return the content of a specified file/url.
     public function file(string $path): string {
         if (filter_var($path, FILTER_VALIDATE_URL)) {
@@ -131,7 +148,7 @@ class Spaghetti
         $path = $this->fullPath($path);
         return file_exists($path) ? file_get_contents($path) : "File read error ($path)\n";
     }
-
+  
     public function fetchUrlContent(string $url): string {
         if (function_exists('curl_init')) {
             $ch = curl_init($url);
