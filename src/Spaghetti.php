@@ -20,7 +20,7 @@ class Spaghetti
         $this->parseArgs($argv);
     }
 
-    public function parseArgsOldRemoveMePlease(array $argv): void {
+    public function parseArgs(array $argv): void {
         $options = getopt("", ["cwd:"]); // Define long option `--cwd`
         
         $args = array_slice($argv, 1);
@@ -58,6 +58,7 @@ class Spaghetti
                 $this->root = dirname(getcwd() . '/' . $this->inputFile);
             }            
         }
+        $this->inputFile = getcwd().'/'.$this->inputFile;
         if(!file_exists($this->inputFile())){
             echo "Input file doesn't exist: " . $this->inputFile() . "\n";
             exit (1);
@@ -65,7 +66,7 @@ class Spaghetti
        
     }
 
-    public function parseArgs(array $argv): void {
+    public function parseArgs2(array $argv): void {
         $options = getopt("", ["cwd:"]); // Parse --cwd option
         $args = array_slice($argv, 1);
 
@@ -105,11 +106,14 @@ class Spaghetti
         return dirname($this->fullPath($this->inputFile));
     }
 
-    public function inputFile(bool $forceFullPath = true):string {
-        if($forceFullPath)
-        {
-            return $this->fullPath($this->inputFile);
-        }
+    public function inputFile():string {
+        var_dump('inputFile: $this->root:',$this->root);
+        var_dump('inputFile: this->inputFile:',$this->inputFile);
+        
+        // if($forceFullPath)
+        // {
+        //     return $this->fullPath($this->inputFile);
+        // }
         return $this->inputFile;
     }
 
@@ -127,26 +131,38 @@ class Spaghetti
     // This is evaluate it, so it's usefull for including .md.php files. Otherwise, if we 
     // want to include a code snippet, without evaluating, we should we ::file method.
     public function import (string $path, array $context = []):string{
+        var_dump('import:',$path);
         $path = $this->fullPath($path);
+        if(!file_exists($path)){
+            return "File read error: $path\n";
+        }
         // We want to pass us ($this) as $spaghetti. Unless the caller overwritten it. 
         // Plus, the caller can pass any other stuff they want to.
-        $context = array_merge([
-                'spaghetti' => $this,
-            ],$context
-        );        
+        $oldRoot = null;
+        if(!isset($context['spaghetti'])){
+            $oldRoot = $this->root;
+            // Well... in any subview in a subdirectory, we expect import('blah.md') to import a file in the same dir as the 
+            // caller. Not the dir of the main caller. 
+            $this->root = dirname($path);
+            $context['spaghetti'] = $this;
+        }
         ob_start();
         extract($context, EXTR_SKIP);
         require ($path);
-        return ob_get_clean();        
+        $result = ob_get_clean();        
+        if($oldRoot !== null){
+            $this->root = $oldRoot;
+        }
+        return $result;
     }
 
-    // Return the content of a specified file/url.
+    // Return the content of a specified file/url. Don't parse it.
     public function file(string $path): string {
         if (filter_var($path, FILTER_VALIDATE_URL)) {
             return $this->fetchUrlContent($path);
         }
         $path = $this->fullPath($path);
-        return file_exists($path) ? file_get_contents($path) : "File read error ($path)\n";
+        return file_exists($path) ? file_get_contents($path) : "File read error: $path\n";
     }
   
     public function fetchUrlContent(string $url): string {

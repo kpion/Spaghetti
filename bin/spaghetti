@@ -22,6 +22,6 @@ use Kpion\Spaghetti\Spaghetti;
 
 // Run...
 $spaghetti = new Spaghetti($argv);
-// $spaghetti->import($spaghetti->inputFile(false));
-require_once $spaghetti->inputFile(false);
+echo $spaghetti->import($spaghetti->inputFile());
+
 
