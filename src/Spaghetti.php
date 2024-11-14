@@ -138,21 +138,13 @@ class Spaghetti
         }
         // We want to pass us ($this) as $spaghetti. Unless the caller overwritten it. 
         // Plus, the caller can pass any other stuff they want to.
-        $oldRoot = null;
         if(!isset($context['spaghetti'])){
-            $oldRoot = $this->root;
-            // Well... in any subview in a subdirectory, we expect import('blah.md') to import a file in the same dir as the 
-            // caller. Not the dir of the main caller. 
-            $this->root = dirname($path);
             $context['spaghetti'] = $this;
         }
         ob_start();
         extract($context, EXTR_SKIP);
         require ($path);
         $result = ob_get_clean();        
-        if($oldRoot !== null){
-            $this->root = $oldRoot;
-        }
         return $result;
     }
 
