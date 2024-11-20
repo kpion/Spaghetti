@@ -19,38 +19,38 @@ It’s perfect for creating quick, topic-focused documentation that’s both hum
 
 ## Example Usage
 
-- Create a file like **about-pet-project.spaghetti.php**:
+### Create a file like **about-pet-project.spaghetti.php**:
 
-\# Pet Adoption Project
+\# *Pet Adoption Project*
 
-This is a simple project for managing a pet adoption database. It includes tables for storing information about pets, their sweetness level (subjective but fun!), and more.
+*Example description: This is a simple project for managing a pet adoption database. It includes tables for storing information about pets, their sweetness level (subjective but fun!), and more.*
+
+### Now create your main file, **index.spaghetti.php**:
+
+*`<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`*
+
+*The most important table in this project is `pet`. Here's its structure:*
+
+*`<?= $spaghetti->db->showTable('pet') ?>`*
+
+*It’s connected to the `sweetness` table, which evaluates how adorable each pet is:*
+
+*`<?= $spaghetti->db->showTable('sweetness') ?>`*
+
+*Each pet is represented by the `Pet` entity:*
+
+*`<?= $spaghetti->file('src/Entity/Pet.php') ?>`*
 
 
-- Now create your main file, **index.spaghetti.php**:
+### Finally, build the documentation using Spaghetti:  
 
-`<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`
-
-The most important table in this project is `pet`. Here's its structure:
-
-`<?= $spaghetti->db->showTable('pet') ?>`
-
-It’s connected to the `sweetness` table, which evaluates how adorable each pet is:
-
-`<?= $spaghetti->db->showTable('sweetness') ?>`
-
-Each pet is represented by the `Pet` entity:
-
-`<?= $spaghetti->file('src/Entity/Pet.php') ?>`
-
-
-Finally, build the documentation using Spaghetti:  
 ```bash
-/path/to/spaghetti index.spaghetti.php > index.md
+spaghetti index.spaghetti.php > index.md
 ```
 
 This will generate a Markdown file (`index.md`) with all your descriptions, database schemas, and entity code snippets combined.
 
-- Alternative: pass it straight to the AI:
+### Alternative: pass it straight to the AI:
  
 ```bash
 ollama run llama3.2 "Could you please review my project? I’m looking for feedback on the code quality, suggestions for improvements, and insights on whether the design patterns used are appropriate. Here are the details: $(spaghetti prompts/index.spaghetti.php)"
@@ -107,12 +107,20 @@ Make sure your global Composer binaries directory is in your system's PATH.
 
 ## Details
 
-### Including External Files
+### Including Other Spaghetti files
+
+Easily include and parse contents of other **spaghetti** files. 
+
+```php
+<?= $spaghetti->import('src/Entity/User.php'); ?>
+```
+
+### Including External Files (sourcce)
 
 Easily include contents of external files to keep your documentation updated without manual copy-pasting. For example:
 
 ```php
-<?= $spaghetti->import('../src/Entity/User.php'); ?>
+<?= $spaghetti->file('src/Entity/User.php'); ?>
 ```
 
 This includes the contents of `User.php` directly in the Markdown output.
@@ -137,20 +145,23 @@ CREATE TABLE `example_table` (
 ```
 
 ## Available Functions
-
+>
 Here are some of the core functions available in **Spaghetti** for generating documentation content:
 
+- **Other spaghetti (or just plain) file Inclusion**:
+  `$spaghetti->import('introduction.spaghetti.php')` - Includes the contents of the specified **spaghetti file** (which will be parsed by **spaghetti**). Relative to the parent directory of main file.
+
 - **File Inclusion**:
-  `$spaghetti->import($path)` - Includes the contents of the specified file.
+  `$spaghetti->file('src/Entity/User.php')` - Includes the contents of the specified **snippet file** (which will **not** be parsed by **spaghetti**, it will be just inserted as it is). Relative to project directory (current working directory).
+
+- **Directory Structure**:
+  `$spaghetti->dir($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters. Relative to the project directory (current working directory)
 
 - **SQL Table Schema**:
   `$spaghetti->db->showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
 
 - **SQL Query Execution**:
   `$spaghetti->db->sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
-
-- **Directory Structure**:
-  `$spaghetti->dir($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters.
 
 - **Table Description**:
   `$spaghetti->db->describeTable($tableName)` - Displays column details of a table, such as types and keys.
