@@ -27,16 +27,15 @@ Make sure your global Composer binaries directory is in your system's PATH.
 
 ## Example Usage
 
-Create a file called .e.g. **test.md.spaghetti** :
+Create a file called .e.g. **test.spaghetti.php** :
 ```
 # This is a Spaghetti test
 
 We can use regular **markdown** syntax, plus PHP functions. For example to include a different md file:
-<?= $spaghetti->file('another-file.md')?>
+<?= $spaghetti->import('another-file.spaghetti.php')?>
 ```
 Then build it:
-`/path/to/spaghetti test.md.spaghetti`
-
+`/path/to/spaghetti test.spaghetti.php > test.md`
 
 
 ### Including External Files
@@ -44,7 +43,7 @@ Then build it:
 Easily include contents of external files to keep your documentation updated without manual copy-pasting. For example:
 
 ```php
-<?= Spaghetti->file('../src/Entity/User.php'); ?>
+<?= $spaghetti->import('../src/Entity/User.php'); ?>
 ```
 
 This includes the contents of `User.php` directly in the Markdown output.
@@ -54,7 +53,7 @@ This includes the contents of `User.php` directly in the Markdown output.
 You can use `showCreateTable` to generate a Markdown-friendly representation of your table’s SQL schema:
 
 ```php
-<?= Spaghetti->showCreateTable('example_table'); ?>
+<?= $spaghetti->showCreateTable('example_table'); ?>
 ```
 
 Assuming `example_table` is defined in your database, the output might look like this:
@@ -73,25 +72,25 @@ CREATE TABLE `example_table` (
 Here are some of the core functions available in **Spaghetti** for generating documentation content:
 
 - **File Inclusion**:
-  `Spaghetti->file($path)` - Includes the contents of the specified file.
+  `$spaghetti->import($path)` - Includes the contents of the specified file.
 
 - **SQL Table Schema**:
-  `Spaghetti->db->showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
+  `$spaghetti->db->showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
 
 - **SQL Query Execution**:
-  `Spaghetti->db->sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
+  `$spaghetti->db->sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
 
 - **Directory Structure**:
-  `Spaghetti->directoryStructure($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters.
+  `$spaghetti->dir($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters.
 
 - **Table Description**:
-  `Spaghetti->db->describeTable($tableName)` - Displays column details of a table, such as types and keys.
+  `$spaghetti->db->describeTable($tableName)` - Displays column details of a table, such as types and keys.
 
 - **Table Indexes**:
-  `Spaghetti->db->showIndexes($tableName)` - Lists all indexes of the specified table in Markdown format.
+  `$spaghetti->db->showIndexes($tableName)` - Lists all indexes of the specified table in Markdown format.
 
 - **Complete Table Documentation**:
-  `Spaghetti->db->describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
+  `$spaghetti->db->describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
 
 ---
 
@@ -99,10 +98,10 @@ Here are some of the core functions available in **Spaghetti** for generating do
 
 1. Clone the repository.
 2. Ensure PHP is installed on your system.
-3. Run the `spaghetti` script with your `your-file.md.spaghetti` file as an argument to generate the Markdown output:
+3. Run the `spaghetti` script with your `your-file.spaghetti.php` file as an argument to generate the Markdown output:
 
 ```bash
-spaghetti your-file.md.spaghetti > your-file.md
+spaghetti your-file.spaghetti.php > your-file.md
 ```
 
 ### Contributing
