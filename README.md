@@ -2,7 +2,6 @@
 
 Create markdown files with a little help of PHP
 
-
 Version 0.1.
 
 Work in progress.
@@ -10,6 +9,8 @@ Work in progress.
 **Spaghetti** is a small, PHP-based tool designed to generate Markdown documentation for individual topics or code snippets. While larger projects may benefit from more extensive tools like Sphinx, **Spaghetti** offers a quick and simple way to document code, database structures, and directory contents in Markdown format.
 
 ## Installation
+
+Installing Spaghetti as a regular Composer dependency is NOT supported. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
 
 Install globally with Composer:
 
