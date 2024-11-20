@@ -1,7 +1,7 @@
 # Spaghetti - Lightweight Documentation Tool
 
-Automate explaining your code to AI (and maybe humans).  
-By creating Markdown files with a little help from PHP.
+Automate explaining your code to AI (and maybe humans). 
+Spaghetti is a tool designed to simplify the creation of project documentation, especially useful for generating structured content for AI review. This is done by creating Markdown files with a little help from PHP.
 
 **Version 0.42** (Work in progress)
 
@@ -28,10 +28,9 @@ This is a simple project for managing a pet adoption database. It includes table
 
 - Now create your main file, **index.spaghetti.php**:
 
+`<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`
 
- `<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`
-
- The most important table in this project is `pet`. Here's its structure:
+The most important table in this project is `pet`. Here's its structure:
 
 `<?= $spaghetti->db->showTable('pet') ?>`
 
@@ -51,6 +50,48 @@ Finally, build the documentation using Spaghetti:
 
 This will generate a Markdown file (`index.md`) with all your descriptions, database schemas, and entity code snippets combined.
 
+- Alternative: pass it straight to the AI:
+ 
+```bash
+ollama run llama3.2 "Could you please review my project? I’m looking for feedback on the code quality, suggestions for improvements, and insights on whether the design patterns used are appropriate. Here are the details: $(spaghetti prompts/index.spaghetti.php)"
+```
+
+## Example output
+
+# Project Documentation
+
+## Pet Adoption Project
+
+This is a simple project for managing a pet adoption (...)
+
+The most important table in this project is `pet`. Here's its structure:
+
+| Column | Type   | Description          |
+|--------|--------|----------------------|
+| id     | int    | Primary key          |
+| name   | varchar| Name of the pet      |
+| ...    | ...    | ...                  |
+
+It’s connected to the `sweetness` table, which evaluates how adorable each pet is:
+
+| Column | Type   | Description                      |
+|--------|--------|----------------------------------|
+| id     | int    | Primary key                      |
+| pet_id | int    | Foreign key referencing `pet`    |
+| level  | int    | Sweetness level of the pet       |
+| ...    | ...    | ...                              |
+
+
+Each pet is represented by the `Pet` entity:
+
+```php
+class Pet {
+    private $id;
+    private $name;
+    // ...
+}
+```
+**...End of example output**
 
 ## Installation
 
@@ -120,23 +161,13 @@ Here are some of the core functions available in **Spaghetti** for generating do
 - **Complete Table Documentation**:
   `$spaghetti->db->describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
 
----
+## Why the Name "Spaghetti"?
 
-## Getting Started
+While "spaghetti code" (mixing logic and presentation) is a horrible and evil practice in 99% of cases, it's actually a perfectly reasonable approach for this project's input files (documentation source files).
 
-1. Clone the repository.
-2. Ensure PHP is installed on your system.
-3. Run the `spaghetti` script with your `your-file.spaghetti.php` file as an argument to generate the Markdown output:
+Plus, I absolutely love spaghetti in all its forms (the food, of course!).
 
-```bash
-spaghetti your-file.spaghetti.php > your-file.md
-```
 
-### Contributing
+## Contributing
 
 This project was built with collaboration and feedback from the community. Contributions, suggestions, and improvements are always welcome!
-
----
-
-Feel free to use, adapt, and extend **Spaghetti** for your small-scale documentation needs.
-
