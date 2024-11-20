@@ -1,12 +1,56 @@
 # Spaghetti - Lightweight Documentation Tool
 
-Create markdown files with a little help of PHP
+Automate explaining your code to AI (and maybe humans).  
+By creating Markdown files with a little help from PHP.
 
-Version 0.1.
+**Version 0.42** (Work in progress)
 
-Work in progress.
+---
 
-**Spaghetti** is a small, PHP-based tool designed to generate Markdown documentation for individual topics or code snippets. While larger projects may benefit from more extensive tools like Sphinx, **Spaghetti** offers a quick and simple way to document code, database structures, and directory contents in Markdown format.
+**Spaghetti** is a lightweight PHP-based tool for generating Markdown documentation. Unlike full-scale documentation tools like phpDocumentor, which focus on entire projects, Spaghetti is designed for narrower, context-specific tasks.  
+
+With Spaghetti, you can easily combine your own explanations with dynamically generated content such as:  
+
+- Database table schemas  
+- Code snippets from specific files  
+- Directory structures  
+
+It’s perfect for creating quick, topic-focused documentation that’s both human-readable and AI-friendly. Whether you’re documenting a single class, explaining a database schema, or just need to save time describing your project in detail, Spaghetti has you covered.
+
+## Example Usage
+
+- Create a file like **about-pet-project.spaghetti.php**:
+
+\# Pet Adoption Project
+
+This is a simple project for managing a pet adoption database. It includes tables for storing information about pets, their sweetness level (subjective but fun!), and more.
+
+
+- Now create your main file, **index.spaghetti.php**:
+
+
+ `<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`
+
+ The most important table in this project is `pet`. Here's its structure:
+
+`<?= $spaghetti->db->showTable('pet') ?>`
+
+It’s connected to the `sweetness` table, which evaluates how adorable each pet is:
+
+`<?= $spaghetti->db->showTable('sweetness') ?>`
+
+Each pet is represented by the `Pet` entity:
+
+`<?= $spaghetti->file('src/Entity/Pet.php') ?>`
+
+
+Finally, build the documentation using Spaghetti:  
+```bash
+/path/to/spaghetti index.spaghetti.php > index.md
+```
+
+This will generate a Markdown file (`index.md`) with all your descriptions, database schemas, and entity code snippets combined.
+
 
 ## Installation
 
@@ -19,24 +63,8 @@ composer global require kpion/spaghetti
 ```
 Make sure your global Composer binaries directory is in your system's PATH.
 
-## Features
 
-- Generate Markdown documentation from PHP files with embedded code.
-- Supports displaying database schema details and SQL table structures.
-- Provides a snapshot of directory structures, useful for project organization.
-
-## Example Usage
-
-Create a file called .e.g. **test.spaghetti.php** :
-```
-# This is a Spaghetti test
-
-We can use regular **markdown** syntax, plus PHP functions. For example to include a different md file:
-<?= $spaghetti->import('another-file.spaghetti.php')?>
-```
-Then build it:
-`/path/to/spaghetti test.spaghetti.php > test.md`
-
+## Details
 
 ### Including External Files
 
