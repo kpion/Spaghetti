@@ -7,8 +7,11 @@ class Spaghetti
     public ?Database $db = null;
     public ?AbstractFormatter $formatter = null;
 
-    // Root directory. By default input file's parent directory.
-    protected ?string $root = null;
+    // Project Root directory. By default cwd (current working dir), i.e. where the program was started
+    protected ?string $projectRoot = null;
+
+    // Document Root directory. By default input file's parent directory.
+    protected ?string $docRoot = null;
 
     // Main input file passed as an argument
     protected ?string $inputFile = null;
@@ -21,7 +24,7 @@ class Spaghetti
     }
 
     public function parseArgs(array $argv): void {
-        $options = getopt("", ["cwd:"]); // Define long option `--cwd`
+        $options = getopt("", ["project:"]); // Define long option `--cwd`
         
         $args = array_slice($argv, 1);
         if(count($args) === 0 || $args[count($args)-1] === ''){
@@ -33,78 +36,66 @@ class Spaghetti
         $this->inputFile = $args[count($args)-1];
         
         // Process `--cwd` if provided
-        if (isset($options['cwd'])) {
-            $cwd = rtrim($options['cwd'], '/');
-            if (!is_dir($cwd)) {
+        if (isset($options['project'])) {
+            $projectRoot = rtrim($options['project'], '/');
+            if (!is_dir($projectRoot)) {
                 echo "Error: Provided --cwd directory does not exist\n";
                 exit(1);
             }
-            if($this->isAbsolute($cwd)){
-                $this->root = $cwd;
+            if($this->isAbsolute($projectRoot)){
+                $this->projectRoot = $projectRoot;
             }else{
-                $this->root = getcwd() . '/' . $cwd;
+                $this->projectRoot = getcwd() . '/' . $projectRoot;
             }
-            if(!@chdir($this->root)){
+            if(!@chdir($this->projectRoot)){
                 echo "Error: Could not change directory\n";
                 exit(1);
             }
         }
 
-        // Apparently we still don't know our roots. No --cwd in params.
-        if($this->root === null){
-            if($this->isAbsolute($this->inputFile)){
-                $this->root = dirname($this->inputFile);
-            }else{
-                $this->root = dirname(getcwd() . '/' . $this->inputFile);
-            }            
+        // Apparently we still don't know our roots. No --project in params. We'll use cwd
+        if($this->projectRoot === null){
+            $this->projectRoot = getcwd();
         }
-        $this->inputFile = getcwd().'/'.$this->inputFile;
+
+        if(!$this->isAbsolute($this->inputFile)){
+            $this->inputFile = getcwd().'/'.$this->inputFile;
+        }
+
+        $this->docRoot = dirname($this->inputFile);
+
         if(!file_exists($this->inputFile())){
             echo "Input file doesn't exist: " . $this->inputFile() . "\n";
             exit (1);
         }
-       
     }
 
-    public function parseArgs2(array $argv): void {
-        $options = getopt("", ["cwd:"]); // Parse --cwd option
-        $args = array_slice($argv, 1);
-
-        // Get the input file path from last argument
-        $this->inputFile = end($args) ?: null;
-        if (!$this->inputFile || !file_exists($this->inputFile)) {
-            exit("Error: Missing or non-existent input file.\n");
+    public function setProjectRoot(string $path): void {
+        if(!$this->isAbsolute($path)){
+            throw new Exception ("setProjectRoot requires an absolute path"); // Otherwise, relative to what?
         }
-
-        // Set the root directory if --cwd is specified
-        $this->root = isset($options['cwd']) ? realpath($options['cwd']) : dirname(realpath($this->inputFile));
-
-        // Set root to current working directory if --cwd is invalid
-        if (!$this->root || !is_dir($this->root)) {
-            exit("Error: Provided --cwd directory is invalid.\n");
-        }
-        // var_dump($this);exit (0);
-    }
-
-    public function isRoot():bool 
-    {
-        return $this->root !== null;
-    }
-
-    public function setRoot(string $path): void {
         $path = rtrim($path,'/');
-        $this->root = $this->isAbsolute($path) ? $path : realpath($this->inputDir() . '/' . $path);
+        $this->docRoot = $path;
     } 
 
-    public function root(): string {
-        return $this->root;
+    public function projectRoot(): string {
+        return $this->projectRoot();
     }    
 
-    // Get the directory of the input file. This often is the same as `root()`
-    public function inputDir(): string 
-    {
-        return dirname($this->fullPath($this->inputFile));
-    }
+    public function setDocRoot(string $path): void {
+        $path = rtrim($path,'/');
+        $this->docRoot = $this->isAbsolute($path) ? $path : realpath($this->docRoot() . '/' . $path);
+    } 
+
+    public function docRoot(): string {
+        return $this->docRoot;
+    }    
+
+    // Get the directory of the input file. This often is the same as `docRoot()`
+    // public function inputDir(): string 
+    // {
+    //     return dirname($this->$this->inputFile);
+    // }
 
     public function inputFile():string {
         return $this->inputFile;
@@ -115,16 +106,21 @@ class Spaghetti
         return $path[0] === DIRECTORY_SEPARATOR || preg_match('~\A[A-Z]:(?![^/\\\\])~i', $path);
     }
 
-    // Get the full path of a relative path
-    public function fullPath(string $path): string {
-        return $this->isAbsolute($path) ? $path : $this->root . '/' . ltrim($path, '/');
+    // Get the full path of a relative path (in the context of projectRoot)
+    public function fullProjectPath(string $path): string {
+        return $this->isAbsolute($path) ? $path : $this->projectRoot . '/' . ltrim($path, '/');
+    }    
+
+    // Get the full path of a relative path (in the context of docRoot)
+    public function fullDocPath(string $path): string {
+        return $this->isAbsolute($path) ? $path : $this->docRoot . '/' . ltrim($path, '/');
     }    
 
     // Returns a **parsed** content of a specified file/url.
     // This is evaluate it, so it's usefull for including .md.php files. Otherwise, if we 
     // want to include a code snippet, without evaluating, we should we ::file method.
     public function import (string $path, array $context = []):string{
-        $path = $this->fullPath($path);
+        $path = $this->fullDocPath($path);
         if(!file_exists($path)){
             return "File read error: $path\n";
         }
@@ -145,7 +141,7 @@ class Spaghetti
         if (filter_var($path, FILTER_VALIDATE_URL)) {
             return $this->fetchUrlContent($path);
         }
-        $path = $this->fullPath($path);
+        $path = $this->fullProjectPath($path);
         return file_exists($path) ? file_get_contents($path) : "File read error: $path\n";
     }
   
@@ -164,7 +160,7 @@ class Spaghetti
 
     // Returns a sorted directory structure in Markdown format with optional exclusions
     public function dir(string $directory, int $depth = 2, array $exclude = ['.git', 'vendor'],  int $indentationLevel = 0): string {
-        $directory = $this->fullPath($directory);
+        $directory = $this->fullProjectPath($directory);
         $output = "";
 
         // Scan current level of directory
