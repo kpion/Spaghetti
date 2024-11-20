@@ -12,11 +12,11 @@ class Database
 {
     // PDO connection, initialized via connect()
     public ?PDO $pdo = null;
-    public ?Markdown $md = null;
+    public ?AbstractFormatter $formatter = null;
 
-    public function __construct (?array $dbConfig = null, ?Markdown $md = null)
+    public function __construct (?array $dbConfig = null, ?AbstractFormatter $formatter = null)
     {
-        $this->md = $md?:new Markdown();
+        $this->formatter = $formatter?:new Markdown();
         if($dbConfig){
             $this->connect($dbConfig);
         }
@@ -58,7 +58,7 @@ class Database
             }
 
             // Markdown table format
-            return $this->md->table($rows);
+            return $this->formatter->table($rows);
         } catch (\Exception $e) {
             return "SQL query error: " . $e->getMessage() . "\n";
         }

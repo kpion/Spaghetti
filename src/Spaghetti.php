@@ -5,7 +5,7 @@ namespace Kpion\Spaghetti;
 class Spaghetti
 {
     public ?Database $db = null;
-    public ?Markdown $md = null;
+    public ?AbstractFormatter $formatter = null;
 
     // Root directory. By default input file's parent directory.
     protected ?string $root = null;
@@ -13,10 +13,10 @@ class Spaghetti
     // Main input file passed as an argument
     protected ?string $inputFile = null;
 
-    public function __construct(array $argv, ?Markdown $md = null, ?Database $db = null, )
+    public function __construct(array $argv, ?AbstractFormatter $formatter = null, ?Database $db = null)
     {
-        $this->md = $md?:new Markdown();
-        $this->db = $db?:new Database(null, $this->md);
+        $this->formatter = $formatter?:new Markdown();
+        $this->db = $db?:new Database(null, $this->formatter);
         $this->parseArgs($argv);
     }
 
@@ -107,13 +107,6 @@ class Spaghetti
     }
 
     public function inputFile():string {
-        var_dump('inputFile: $this->root:',$this->root);
-        var_dump('inputFile: this->inputFile:',$this->inputFile);
-        
-        // if($forceFullPath)
-        // {
-        //     return $this->fullPath($this->inputFile);
-        // }
         return $this->inputFile;
     }
 
@@ -131,7 +124,6 @@ class Spaghetti
     // This is evaluate it, so it's usefull for including .md.php files. Otherwise, if we 
     // want to include a code snippet, without evaluating, we should we ::file method.
     public function import (string $path, array $context = []):string{
-        var_dump('import:',$path);
         $path = $this->fullPath($path);
         if(!file_exists($path)){
             return "File read error: $path\n";
@@ -199,7 +191,7 @@ class Spaghetti
 
             // Add current item to output with appropriate icon
             $indentation = str_repeat('    ', $indentationLevel);
-            $output .= $indentation  . (is_dir($fullPath) ? "📂 " : "📄 ") . $item . "\n";
+            $output .= $indentation  . (is_dir($fullPath) ? "📂 " : "📄 ") . $this->formatter->format($item,4) . "\n";
 
             // If the item is a directory and we have more depth to go, recurse
             if (is_dir($fullPath) && $depth > 1) {
@@ -210,7 +202,5 @@ class Spaghetti
         //return $indentationLevel === 0 ? "```markdown\n$output\n```\n" : $output;
         return $output;
     }
-
-
 }
 
