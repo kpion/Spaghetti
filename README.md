@@ -62,7 +62,7 @@ I’m looking for feedback on\
 the code quality, suggestions for improvements,\
 and insights on whether the design patterns used\
 are appropriate.\
-Also, tell me a joke about spaghetti code, avoid the one about therapy\
+Also, tell me a joke about spaghetti code, avoid the one about feeling 'twisted'
 Here are the details: $(spaghetti prompts/index.spaghetti.php)"
 ```
 
