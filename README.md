@@ -1,4 +1,4 @@
-# Spaghetti - Lightweight Documentation Tool
+# 🍝 Spaghetti - Low Calorie Documentation Tool
 
 Automate explaining your code to AI (and maybe humans). 
 Spaghetti is a tool designed to simplify the creation of project documentation, especially useful for generating structured content for AI review. This is done by creating Markdown files with a little help from PHP.
@@ -186,7 +186,6 @@ Here are some of the core functions available in **Spaghetti** for generating do
 While "spaghetti code" (mixing logic and presentation) is a horrible and evil practice in 99% of cases, it's actually a perfectly reasonable approach for this project's input files (documentation source files).
 
 Plus, I absolutely love spaghetti in all its forms (the food, of course!). Buon appetito 🍝!
-
 
 
 ## Contributing
