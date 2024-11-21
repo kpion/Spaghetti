@@ -9,11 +9,11 @@ Spaghetti is a tool designed to simplify the creation of project documentation, 
 
 **Spaghetti** is a lightweight PHP-based tool for generating Markdown documentation. Unlike full-scale documentation tools like phpDocumentor, which focus on entire projects, Spaghetti is designed for narrower, context-specific tasks.  
 
-With Spaghetti, you can easily combine your own explanations with dynamically generated content such as:  
+With Spaghetti, you can easily combine your own explanations with dynamically generated content such as:
 
-- Database table schemas  
-- Code snippets from specific files  
-- Directory structures  
+- Database table schemas
+- Code snippets from specific files
+- Directory structures
 
 It’s perfect for creating quick, topic-focused documentation that’s both human-readable and AI-friendly. Whether you’re documenting a single class, explaining a database schema, or just need to save time describing your project in detail, Spaghetti has you covered.
 
@@ -42,7 +42,7 @@ It’s perfect for creating quick, topic-focused documentation that’s both hum
 > *`<?= $spaghetti->file('src/Entity/Pet.php') ?>`*
 
 
-### Finally, build the documentation using Spaghetti:  
+### Finally, build the documentation using Spaghetti:
 
 ```bash
 spaghetti index.spaghetti.php > index.md
@@ -111,8 +111,7 @@ Install globally with Composer:
 composer global require kpion/spaghetti
 ```
 
-Make sure your global Composer binaries directory is in your system's PATH.
-
+Make sure your global Composer binaries directory is in your system's PATH. Because lost spaghetti is sad spaghetti.
 
 ## Details
 
@@ -154,14 +153,14 @@ CREATE TABLE `example_table` (
 ```
 
 ## Available Functions
->
+
 Here are some of the core functions available in **Spaghetti** for generating documentation content:
 
 - **Other spaghetti (or just plain) file Inclusion**:
-  `$spaghetti->import('introduction.spaghetti.php')` - Includes the contents of the specified **spaghetti file** (which will be parsed by **spaghetti**). Relative to the parent directory of main file.
+  `$spaghetti->import('introduction.spaghetti.php')` - Includes the contents of the specified **spaghetti file** (which will be parsed by **spaghetti**). Relative to the parent directory of the main file.
 
 - **File Inclusion**:
-  `$spaghetti->file('src/Entity/User.php')` - Includes the contents of the specified **snippet file** (which will **not** be parsed by **spaghetti**, it will be just inserted as it is). Relative to project directory (current working directory).
+  `$spaghetti->file('src/Entity/User.php')` - Includes the contents of the specified **snippet file** (which will **not** be parsed by **spaghetti**, it will be just inserted as it is). Relative to the project directory (current working directory).
 
 - **Directory Structure**:
   `$spaghetti->dir($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters. Relative to the project directory (current working directory)
