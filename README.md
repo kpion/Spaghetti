@@ -21,25 +21,25 @@ It’s perfect for creating quick, topic-focused documentation that’s both hum
 
 ### Create a file like **about-pet-project.spaghetti.php**:
 
-\# *Pet Adoption Project*
-
-*Example description: This is a simple project for managing a pet adoption database. It includes tables for storing information about pets, their sweetness level (subjective but fun!), and more.*
+> \# *Pet Adoption Project*
+>
+> *Example description: This is a simple project for managing a pet adoption database. It includes tables for storing information about pets, their sweetness level (subjective but fun!), and more.*
 
 ### Now create your main file, **index.spaghetti.php**:
 
-*`<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`*
-
-*The most important table in this project is `pet`. Here's its structure:*
-
-*`<?= $spaghetti->db->showTable('pet') ?>`*
-
-*It’s connected to the `sweetness` table, which evaluates how adorable each pet is:*
-
-*`<?= $spaghetti->db->showTable('sweetness') ?>`*
-
-*Each pet is represented by the `Pet` entity:*
-
-*`<?= $spaghetti->file('src/Entity/Pet.php') ?>`*
+> *`<?= $spaghetti->import('about-pet-project.spaghetti.php') ?>`*
+>
+> *The most important table in this project is `pet`. Here's its structure:*
+>
+> *`<?= $spaghetti->db->showTable('pet') ?>`*
+>
+> *It’s related to the `sweetness` table, which evaluates how adorable each pet is:*
+>
+> *`<?= $spaghetti->db->showTable('sweetness') ?>`*
+>
+> *Each pet is represented by the `Pet` entity:*
+>
+> *`<?= $spaghetti->file('src/Entity/Pet.php') ?>`*
 
 
 ### Finally, build the documentation using Spaghetti:  
@@ -50,17 +50,22 @@ spaghetti index.spaghetti.php > index.md
 
 This will generate a Markdown file (`index.md`) with all your descriptions, database schemas, and entity code snippets combined.
 
-### Alternative: pass it straight to the AI:
- 
+### Alternative: pass it straight to the AI on CLI:
+
 ```bash
-ollama run llama3.2 "Could you please review my project? I’m looking for feedback on the code quality, suggestions for improvements, and insights on whether the design patterns used are appropriate. Here are the details: $(spaghetti prompts/index.spaghetti.php)"
+ollama run llama3.2 "Could you please review my project?\
+I’m looking for feedback on\
+the code quality, suggestions for improvements,\
+and insights on whether the design patterns used\
+are appropriate.\
+Here are the details: $(spaghetti prompts/index.spaghetti.php)"
 ```
 
 ## Example output
 
-# Project Documentation
+The above example will result in a markdown file similar to this:
 
-## Pet Adoption Project
+\# **Pet Adoption Project**
 
 This is a simple project for managing a pet adoption (...)
 
@@ -72,7 +77,7 @@ The most important table in this project is `pet`. Here's its structure:
 | name   | varchar| Name of the pet      |
 | ...    | ...    | ...                  |
 
-It’s connected to the `sweetness` table, which evaluates how adorable each pet is:
+It’s related to the `sweetness` table, which evaluates how adorable each pet is:
 
 | Column | Type   | Description                      |
 |--------|--------|----------------------------------|
@@ -95,13 +100,17 @@ class Pet {
 
 ## Installation
 
-Installing Spaghetti as a regular Composer dependency is NOT supported. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
+> [!NOTE]
+> Installing Spaghetti as a regular Composer dependency is NOT supported. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
+
+
 
 Install globally with Composer:
 
 ```bash
 composer global require kpion/spaghetti
 ```
+
 Make sure your global Composer binaries directory is in your system's PATH.
 
 
@@ -112,10 +121,10 @@ Make sure your global Composer binaries directory is in your system's PATH.
 Easily include and parse contents of other **spaghetti** files. 
 
 ```php
-<?= $spaghetti->import('src/Entity/User.php'); ?>
+<?= $spaghetti->import('other-document.spaghetti.php'); ?>
 ```
 
-### Including External Files (sourcce)
+### Including External Files (source files)
 
 Easily include contents of external files to keep your documentation updated without manual copy-pasting. For example:
 
