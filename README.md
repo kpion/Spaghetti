@@ -185,7 +185,7 @@ Here are some of the core functions available in **Spaghetti** for generating do
 
 While "spaghetti code" (mixing logic and presentation) is a horrible and evil practice in 99% of cases, it's actually a perfectly reasonable approach for this project's input files (documentation source files).
 
-Plus, I absolutely love spaghetti in all its forms (the food, of course!). Bon appétit 🍝!
+Plus, I absolutely love spaghetti in all its forms (the food, of course!). Buon appetito 🍝!
 
 
 
