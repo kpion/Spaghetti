@@ -54,7 +54,7 @@ spaghetti index.spaghetti.php > index.md
 
 This will generate a Markdown file (`index.md`) with all your descriptions, database schemas, and entity code snippets combined.
 
-### Alternative: pass it straight to the AI on CLI:
+### Alternatively, you can pass it directly to another application, such as an AI model
 
 ```bash
 ollama run llama3.2 "Could you please review my project?\
@@ -62,8 +62,12 @@ I’m looking for feedback on\
 the code quality, suggestions for improvements,\
 and insights on whether the design patterns used\
 are appropriate.\
+Also, tell me a joke about spaghetti code, avoid the one about therapy\
 Here are the details: $(spaghetti prompts/index.spaghetti.php)"
 ```
+
+This way, you can start your day with a cup of coffee and a single command, `spaghetti` ensures the information returned is up-to-date :)
+
 
 ## Example output
 
