@@ -1,6 +1,7 @@
 <?php 
 namespace Kpion\Spaghetti;
 
+use \Exception;
 
 class Spaghetti
 {
