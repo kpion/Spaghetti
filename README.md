@@ -116,7 +116,11 @@ Install globally with Composer:
 composer global require kpion/spaghetti
 ```
 
-Make sure your global Composer binaries directory is in your system's PATH. Because lost spaghetti is sad spaghetti.
+Make sure your global Composer binaries directory* is in your system's PATH. Because lost spaghetti is sad spaghetti.
+
+\* Usually, on Ubuntu, Composer binaries are located either in *~/.config/composer/vendor/bin/* or *~/.composer/vendor/bin/*.
+
+
 
 ## Details
 
