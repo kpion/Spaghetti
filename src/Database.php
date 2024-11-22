@@ -47,7 +47,7 @@ class Database
     // Executes a SQL statement and returns the result in a Markdown table format.
     public function sql(string $sql, int $valueMaxLength = 1000): string {
         if ($this->pdo === null) {
-            return "Database connection is not set.\n";
+            return "Database connection is not set. Use ->connect. \n";
         }        
         try {
             $result = $this->pdo->query($sql);
@@ -67,7 +67,7 @@ class Database
     // Show the creation SQL of a table.
     public function showCreateTable(string $tableName): string {
         if ($this->pdo === null) {
-            return "Database connection is not set.\n";
+            return "Database connection is not set. Use ->connect. \n";
         }        
         try {
             $stmt = $this->pdo->query("SHOW CREATE TABLE `$tableName`");

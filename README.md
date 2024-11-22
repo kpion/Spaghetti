@@ -83,6 +83,7 @@ The most important table in this project is `pet`. Here's its structure:
 | name   | varchar| Name of the pet      |
 | ...    | ...    | ...                  |
 
+
 It’s related to the `sweetness` table, which evaluates how adorable each pet is:
 
 | Column | Type   | Description                      |
@@ -108,8 +109,6 @@ class Pet {
 
 > [!NOTE]
 > Installing Spaghetti as a regular Composer dependency is NOT supported. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
-
-
 
 Install globally with Composer:
 

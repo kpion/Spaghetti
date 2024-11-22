@@ -140,13 +140,13 @@ class Spaghetti
     // Return the content of a specified file/url. Don't parse it.
     public function file(string $path): string {
         if (filter_var($path, FILTER_VALIDATE_URL)) {
-            return $this->fetchUrlContent($path);
+            return $this->fetch($path);
         }
         $path = $this->fullProjectPath($path);
         return file_exists($path) ? file_get_contents($path) : "File read error: $path\n";
     }
   
-    public function fetchUrlContent(string $url): string {
+    public function fetch(string $url): string {
         if (function_exists('curl_init')) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
