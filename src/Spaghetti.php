@@ -17,11 +17,19 @@ class Spaghetti
     // Main input file passed as an argument
     protected ?string $inputFile = null;
 
-    public function __construct(array $argv, ?AbstractFormatter $formatter = null, ?Database $db = null)
+    /**
+     * Cooks up a new spaghetti instance.
+     * 
+     * @param array $argv optional CLI arguments. If not given we can use e.g. setInputFile later.
+     * @param AbstractFormatter $formatter AbstractFormatter instance, we'll use Markdown if null given
+     */
+    public function __construct(?array $argv, ?AbstractFormatter $formatter = null, ?Database $db = null)
     {
         $this->formatter = $formatter?:new Markdown();
         $this->db = $db?:new Database(null, $this->formatter);
-        $this->parseArgs($argv);
+        if($argv !== null){
+            $this->parseArgs($argv);
+        }
     }
 
     public function parseArgs(array $argv): void {
@@ -71,6 +79,14 @@ class Spaghetti
         }
     }
 
+    /**
+     * Just an alias for $this->import($this->inputFile());, so we can start everything so nicely: echo (new Spaghetti($argv))->run();
+     */
+    public function run(){
+        return $this->import($this->inputFile());
+    }
+
+    // Root directory of main project's source files
     public function setProjectRoot(string $path): void {
         if(!$this->isAbsolute($path)){
             throw new Exception ("setProjectRoot requires an absolute path"); // Otherwise, relative to what?
@@ -79,25 +95,38 @@ class Spaghetti
         $this->docRoot = $path;
     } 
 
+    // Root directory of main project's source files
     public function projectRoot(): string {
         return $this->projectRoot();
     }    
 
+    // Get the full path of a relative path (in the context of projectRoot)
+    public function fullProjectPath(string $path): string {
+        return $this->isAbsolute($path) ? $path : $this->projectRoot . '/' . ltrim($path, '/');
+    }    
+
+
+    // Root directory of documentation
     public function setDocRoot(string $path): void {
         $path = rtrim($path,'/');
         $this->docRoot = $this->isAbsolute($path) ? $path : realpath($this->docRoot() . '/' . $path);
     } 
 
+    // Root directory of documentation
     public function docRoot(): string {
         return $this->docRoot;
     }    
 
-    // Get the directory of the input file. This often is the same as `docRoot()`
-    // public function inputDir(): string 
-    // {
-    //     return dirname($this->$this->inputFile);
-    // }
+    // Get the full path of a relative path (in the context of docRoot)
+    public function fullDocPath(string $path): string {
+        return $this->isAbsolute($path) ? $path : $this->docRoot . '/' . ltrim($path, '/');
+    }    
 
+    public function setInputFile(string $inputFile):static {
+        $this->inputFile = $inputFile;
+        return $this;
+    }
+   
     public function inputFile():string {
         return $this->inputFile;
     }
@@ -106,16 +135,6 @@ class Spaghetti
     public function isAbsolute(string $path): bool {
         return $path[0] === DIRECTORY_SEPARATOR || preg_match('~\A[A-Z]:(?![^/\\\\])~i', $path);
     }
-
-    // Get the full path of a relative path (in the context of projectRoot)
-    public function fullProjectPath(string $path): string {
-        return $this->isAbsolute($path) ? $path : $this->projectRoot . '/' . ltrim($path, '/');
-    }    
-
-    // Get the full path of a relative path (in the context of docRoot)
-    public function fullDocPath(string $path): string {
-        return $this->isAbsolute($path) ? $path : $this->docRoot . '/' . ltrim($path, '/');
-    }    
 
     // Returns a **parsed** content of a specified file/url.
     // This is evaluate it, so it's usefull for including .md.php files. Otherwise, if we 
@@ -195,8 +214,6 @@ class Spaghetti
                 $output .= $this->dir($fullPath, $depth - 1, $exclude, $indentationLevel + 1);
             }
         }
-
-        //return $indentationLevel === 0 ? "```markdown\n$output\n```\n" : $output;
         return $output;
     }
 }
