@@ -179,7 +179,7 @@ class Spaghetti
     }
 
     // Returns a sorted directory structure in Markdown format with optional exclusions
-    public function dir(string $directory, int $depth = 2, array $exclude = ['.git', 'vendor'],  int $indentationLevel = 0): string {
+    public function dir(string $directory = '.', int $depth = 2, array $exclude = ['.git', 'vendor'],  int $indentationLevel = 0): string {
         $directory = $this->fullProjectPath($directory);
         $output = "";
 
@@ -207,7 +207,7 @@ class Spaghetti
 
             // Add current item to output with appropriate icon
             $indentation = str_repeat('    ', $indentationLevel);
-            $output .= $indentation  . (is_dir($fullPath) ? "📂 " : "📄 ") . $this->formatter->sanitize($item,64) . "\n";
+            $output .= $indentation  . '- ' . (is_dir($fullPath) ? "📂 " : "📄 ") . $this->formatter->sanitize($item,64) . "\n";
 
             // If the item is a directory and we have more depth to go, recurse
             if (is_dir($fullPath) && $depth > 1) {

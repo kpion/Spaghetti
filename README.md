@@ -174,19 +174,13 @@ Here are some of the core functions available in **Spaghetti** for generating do
   `$spaghetti->dir($directory, $depth = 2, $exclude = ['.git', 'vendor'])` - Shows a tree-like structure of directories with optional depth and exclusion parameters. Relative to the project directory (current working directory)
 
 - **SQL Table Schema**:
-  `$spaghetti->db->showCreateTable($tableName)` - Shows the SQL `CREATE TABLE` statement for the specified table.
+  `$spaghetti->db->table($tableName)` - Shows the details of specified table (e.g. `SHOW CREATE TABLE` statement, as well as a few first records)
+
+- **Table Indexes**:
+  `$spaghetti->db->indexes($tableName)` - Lists all indexes of the specified table in Markdown format.
 
 - **SQL Query Execution**:
   `$spaghetti->db->sql($query, $valueLengthLimit = 1000)` - Executes an SQL query and returns results as a Markdown table.
-
-- **Table Description**:
-  `$spaghetti->db->describeTable($tableName)` - Displays column details of a table, such as types and keys.
-
-- **Table Indexes**:
-  `$spaghetti->db->showIndexes($tableName)` - Lists all indexes of the specified table in Markdown format.
-
-- **Complete Table Documentation**:
-  `$spaghetti->db->describeFullTable($tableName)` - Combines the table structure, `CREATE TABLE` statement, and indexes in a single output for complete table documentation.
 
 ## Why the Name "Spaghetti"?
 

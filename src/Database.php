@@ -58,13 +58,13 @@ class Database
             }
 
             // Markdown table format
-            return $this->formatter->table($rows);
+            return $this->formatter->table($rows,valueMaxLength:$valueMaxLength);
         } catch (\Exception $e) {
             return "SQL query error: " . $e->getMessage() . "\n";
         }
     }
 
-    // Show the creation SQL of a table.
+    // Show the `SHOW CREATE TABLE` result.
     public function showCreateTable(string $tableName): string {
         if ($this->pdo === null) {
             return "Database connection is not set. Use ->connect. \n";
@@ -79,33 +79,54 @@ class Database
                 return "No results found for table: `$tableName`.\n";
             }
         } catch (Exception $e) {
-            return "SQL query error (SHOW CREATE TABLE): " . $e->getMessage() . "\n";
+            return "SQL query eshowrror (SHOW CREATE TABLE): " . $e->getMessage() . "\n";
         }
     }    
-
-    // Show indexes of a table in Markdown format.
-    public function showIndexes(string $tableName): string {
-        return $this->sql("SHOW INDEXES FROM `$tableName`");
-    }
-    
 
     // Show a detailed description of a table's columns.
     public function describeTable(string $tableName): string {
         return $this->sql("DESCRIBE `$tableName`");
     }
 
-    // Generate a complete description for a table including structure, indexes, and creation SQL.
-    public function describeFullTable(string $tableName): string {
+    // Show indexes of a table in Markdown format.
+    public function indexes(string $tableName): string {
+        return $this->sql("SHOW INDEXES FROM `$tableName`");
+    }
+    
+
+    /**
+     * Generate a complete description for a table including structure, indexes, and creation SQL.
+     * 
+     * @param string $tableName table name
+     * @param string $mode 'create' will use `SHOW CREATE TABLE`, 'describe' will use DESCRIBE `$tableName`. Can be false.
+    */
+    public function table(string $tableName, string|bool $mode = 'create', $indexes = false, int $recordsCount = 0): string {
+        $tableName = trim($tableName);
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
+            return "Error: Invalid table name\n";
+        }        
         $output = "## Table: `$tableName`\n\n";
+        if($mode !== false){
+            $output .= "### Table Structure\n";
+            if($mode === 'create'){
+                $output .= $this->showCreateTable($tableName) . "\n";
+            }elseif ($mode === 'describe'){
+                $output .= $this->describeTable($tableName) . "\n";
+            }else{
+                $output .= "Error: unknown mode: $mode \n";
+            }
+        }
+        
+        if($indexes){
+            $output .= "### Indexes\n";
+            $output .= $this->indexes($tableName) . "\n";
+        }
 
-        $output .= "### Table Structure\n";
-        $output .= $this->describeTable($tableName) . "\n";
+        if($recordsCount){
+            $output .= "### $recordsCount example records\n";
+            $output .= $this->sql("SELECT * FROM $tableName LIMIT $recordsCount", valueMaxLength:60); 
+        }
 
-        $output .= "### Create Table SQL\n";
-        $output .= $this->showCreateTable($tableName) . "\n";
-
-        $output .= "### Indexes\n";
-        $output .= $this->showIndexes($tableName) . "\n";
 
         return $output;
     }
