@@ -108,7 +108,7 @@ class Pet {
 ## Installation
 
 > [!NOTE]
-> Installing Spaghetti as a regular Composer dependency is NOT supported. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
+> Installing Spaghetti as a regular Composer dependency is not recommended. Spaghetti is a tool, not a library. As such, it should be installed as a standalone package, so that Spaghetti's dependencies do not interfere with your project's dependencies.
 
 Install globally with Composer:
 

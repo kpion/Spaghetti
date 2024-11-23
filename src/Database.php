@@ -100,13 +100,13 @@ class Database
      * @param string $tableName table name
      * @param string $mode 'create' will use `SHOW CREATE TABLE`, 'describe' will use DESCRIBE `$tableName`. Can be false.
     */
-    public function table(string $tableName, string|bool $mode = 'create', $indexes = false, int $recordsCount = 0): string {
+    public function table(string $tableName, ?string $mode = 'create', $indexes = false, int $recordsCount = 0): string {
         $tableName = trim($tableName);
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
             return "Error: Invalid table name\n";
         }        
         $output = "## Table: `$tableName`\n\n";
-        if($mode !== false){
+        if(!empty($mode)){
             $output .= "### Table Structure\n";
             if($mode === 'create'){
                 $output .= $this->showCreateTable($tableName) . "\n";

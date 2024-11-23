@@ -122,9 +122,8 @@ class Spaghetti
         return $this->isAbsolute($path) ? $path : $this->docRoot . '/' . ltrim($path, '/');
     }    
 
-    public function setInputFile(string $inputFile):static {
+    public function setInputFile(string $inputFile):void {
         $this->inputFile = $inputFile;
-        return $this;
     }
    
     public function inputFile():string {
