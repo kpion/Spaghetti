@@ -45,6 +45,7 @@ class Spaghetti
         $this->inputFile = $args[count($args)-1];
         
         // Process `--cwd` if provided
+        // @todo: take `--cwd` into account as well
         if (isset($options['project'])) {
             $projectRoot = rtrim($options['project'], '/');
             if (!is_dir($projectRoot)) {

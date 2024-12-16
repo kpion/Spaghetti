@@ -93,7 +93,6 @@ class Database
         return $this->sql("SHOW INDEXES FROM `$tableName`");
     }
     
-
     /**
      * Generate a complete description for a table including structure, indexes, and creation SQL.
      * 
@@ -105,9 +104,9 @@ class Database
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
             return "Error: Invalid table name\n";
         }        
-        $output = "## Table: `$tableName`\n\n";
+        $output = "**Table: `$tableName`**\n\n";
         if(!empty($mode)){
-            $output .= "### Table Structure\n";
+            $output .= "- Table Structure\n";
             if($mode === 'create'){
                 $output .= $this->showCreateTable($tableName) . "\n";
             }elseif ($mode === 'describe'){
@@ -118,12 +117,12 @@ class Database
         }
         
         if($indexes){
-            $output .= "### Indexes\n";
+            $output .= "- Indexes\n";
             $output .= $this->indexes($tableName) . "\n";
         }
 
         if($recordsCount){
-            $output .= "### $recordsCount example records\n";
+            $output .= "- $recordsCount example records\n";
             $output .= $this->sql("SELECT * FROM $tableName LIMIT $recordsCount", valueMaxLength:60); 
         }
 
